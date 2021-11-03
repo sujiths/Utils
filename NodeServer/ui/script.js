@@ -1,5 +1,9 @@
 function do_upload() {
     let data = document.getElementById("file").files[0];
+    if(data === undefined) {
+        alert("Select a file before uploading..");
+        return;
+    }
     const formData = new FormData();
     formData.append('minidump', data);
     var spin = document.getElementById("spinner");
