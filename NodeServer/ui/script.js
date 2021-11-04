@@ -6,7 +6,7 @@ function do_upload() {
     }
     const formData = new FormData();
     formData.append('minidump', data);
-    var spin = document.getElementById("spinner");
+    let spin = document.getElementById("spinner");
     spin.classList.add("spinner-border");
     console.log('do_upload ', data)
     fetch("http://localhost:80/dump", {
