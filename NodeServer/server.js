@@ -32,7 +32,7 @@ app.post('/dump', function (req, res) {
       }, fail => {
          console.error("Failed to execute command!!!");
       }
-   );
+   ).catch(err => {console.error("Error occured in one of the step!!")})
 })
 
 
