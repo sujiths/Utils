@@ -28,11 +28,12 @@ app.post('/dump', function (req, res) {
       return execute_shell(req.file.originalname);
    }, fail => { console.error("Failed to write the file!!!!"); }).then(
       success => {
-         callback(res, req.file.originalname);
+         callback(res, req.file.originalname, success.toString());
       }, fail => {
+         callback(res, req.file.originalname, fail.toString());
          console.error("Failed to execute command!!!");
       }
-   ).catch(err => {console.error("Error occured in one of the step!!")})
+   ).catch(err => { console.error("Error occured in one of the step!!") })
 })
 
 
@@ -43,33 +44,36 @@ async function write_dump_file(filename, data) {
 
 function execute_shell(filename) {
    return new Promise((resolve, reject) => {
-
+      let result;
       const { spawn } = require('child_process');
-      const ls = spawn('cat', [filename]);
+      const ls = spawn('ls', [filename]);
 
       ls.stdout.on('data', (data) => {
+         result += data;
          console.log(`stdout: ${data}`);
       });
 
       ls.stderr.on('data', (data) => {
+         result += data;
          console.log(`stderr: ${data}`);
       });
 
       ls.on('close', (code) => {
          if (code == 0) {
             console.error("Command succeded!!!");
-            resolve();
+            resolve(result);
          }
          else {
             console.error("Command execution failed!!!");
-            reject();
+            reject(result);
          }
       });
    });
 }
 
-function callback(res, file) {
-   res.json({ filename: file });
+function callback(res, file, data) {
+   console.log(data);
+   res.json({ filename: file, result: data });
 }
 
 var server = app.listen(80, function () {
