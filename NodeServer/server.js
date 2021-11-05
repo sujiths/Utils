@@ -44,7 +44,7 @@ async function write_dump_file(filename, data) {
 
 function execute_shell(filename) {
    return new Promise((resolve, reject) => {
-      let result;
+      let result = "";
       const { spawn } = require('child_process');
       const ls = spawn('ls', [filename]);
 
